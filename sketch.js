@@ -28,6 +28,8 @@ function preload(){
   blink = loadAnimation("blink_1.png","blink_2.png","blink_3.png");
   eat = loadAnimation("eat_0.png" , "eat_1.png","eat_2.png","eat_3.png","eat_4.png");
   sad = loadAnimation("sad_1.png","sad_2.png","sad_3.png");
+  eat.looping=false
+  sad.looping=false
 }
 
 function setup() {
@@ -45,13 +47,13 @@ function setup() {
 
   rectMode(CENTER);
   ellipseMode(RADIUS);
-  textSize(50)
+    textSize(50)
   imageMode(CENTER);
   button=createImg("cut_btn.png")
   button.position(220,30)
   button.size(50,50) 
   button.mouseClicked(cortar)
-
+  blink.frameDelay=20
   bunny = createSprite(230,620,100,100);
   bunny.scale = 0.2;
 
@@ -65,14 +67,39 @@ function draw() {
   background(51);
  
   image(bg_img,width/2,height/2,490,690);
+  if(fruit!=null){
   image(food,fruit.position.x,fruit.position.y,70,70);
+  }
   rope.show();
   Engine.update(engine);
   ground.show();
-   
+  drawSprites()
+  if(collision(fruit,bunny)){
+  bunny.changeAnimation("eating")
+  
+  }
+if(collision(fruit,ground.body)){
+ bunny.changeAnimation("crying")
+}
 }
 
 function cortar(){
   rope.break()
   fruit_con. detach()
 }
+ function collision(bodie,sprite){
+   if(bodie!=null){
+   
+   
+ var distancia = dist(bodie.position.x,bodie.position.y,sprite.position.x,sprite.position.y)
+ if(distancia<=80){
+ World.remove(world,bodie)
+ fruit=null  
+ return true
+ 
+ }
+ else{
+ return false
+ }
+ }
+ }
