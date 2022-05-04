@@ -20,6 +20,9 @@ var button
 var bunny;
 var blink,eat,sad;
 
+var mute
+var balão
+
 var bk_song;  // SOM DO BG
 var cut_sound;  // SOM CORTANTO A CORDA
 var sad_sound;  // SOM TRISTE
@@ -67,6 +70,15 @@ function setup() {
   button.position(220,30)
   button.size(50,50) 
   button.mouseClicked(cortar)
+  balão=createImg("balloon.png")
+  balão.position(50,295)
+  balão.size(100,100)
+  balão.mouseClicked(ar)
+  mute=createImg("mute.png")
+  mute.position(100,30)
+  mute.size(50,50)
+  mute.mouseClicked(xiu)
+
 
   blink.frameDelay=20
   eat.frameDelay = 20;
@@ -94,16 +106,30 @@ function draw() {
 
   if(collision(fruit,bunny)){
     bunny.changeAnimation("eating")
+    eating_sound.play()
   }
   if(collision(fruit,ground.body)){
     bunny.changeAnimation("crying")
     fruit = null
+    sad_sound.play()
   }
+}
+function ar(){
+air.play()
+Matter.Body.applyForce(fruit,{x:0,y:0},{x:0.05,y:0.0})
+}
+function xiu(){
+if(bk_song.isPlaying()){
+  bk_song.stop()
+}else{
+  bk_song.play()
+}
 }
 
 function cortar(){
   rope.break()
   fruit_con. detach()
+  cut_sound.play()
 }
  
 function collision(bodie,sprite){
