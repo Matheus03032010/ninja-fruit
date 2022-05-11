@@ -28,6 +28,7 @@ var cut_sound;  // SOM CORTANTO A CORDA
 var sad_sound;  // SOM TRISTE
 var eating_sound; // SOM COMENDO
 var air;  /// SOM DO AR
+var altura 
 
 function preload(){
   bg_img = loadImage('background.png');
@@ -47,14 +48,22 @@ function preload(){
   sad.looping=false
 }
 
-function setup() {
-  
-  createCanvas(500,700);
+function setup() { 
+
+  var dispositivo =/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  if (dispositivo){
+    altura=displayHeight
+    createCanvas(displayWidth+80,displayHeight);
+  }
+  else{
+    altura=windowHeight
+  createCanvas(windowWidth,windowHeight);
+  }
   
   frameRate(80);
   engine = Engine.create();
   world = engine.world;
-  ground = new Ground(200,690,600,20);
+  ground = new Ground(200,altura,600,20);
 
   rope = new Rope(7,{x:55,y:30});
   rope2 = new Rope(7,{x:370,y:40});
@@ -70,7 +79,7 @@ function setup() {
   rectMode(CENTER);
   ellipseMode(RADIUS);
   textSize(50)
-  imageMode(CENTER);
+  //imageMode(CENTER);
 
   button=createImg("cut_btn.png")
   button.position(50,30)
@@ -99,7 +108,7 @@ function setup() {
 
   blink.frameDelay=20
   eat.frameDelay = 20;
-  bunny = createSprite(350,620,100,100);
+  bunny = createSprite(350,altura-80,100,100);
   bunny.scale = 0.2;
 
   bunny.addAnimation('blinking',blink);  // começa com essa! 
@@ -110,12 +119,14 @@ function setup() {
 function draw() {
   background(51);
   Engine.update(engine);
-  image(bg_img,width/2,height/2,490,690);
+  image(bg_img,0,0,displayWidth+80,displayHeight);
+  push()
+  imageMode(CENTER);
 
   if(fruit!=null){
     image(food,fruit.position.x,fruit.position.y,70,70);
   }
-
+ pop()
   rope.show();
   rope2.show();
   rope3.show();
@@ -165,8 +176,7 @@ function cortar3(){
   cut_sound.play();   
   rope3.break();
   fruit_con_3.detach();
-  fruit_con_3 = null; 
-}
+  fruit_con_3 = null; }
  
 function collision(bodie,sprite){
   if(bodie!=null){
